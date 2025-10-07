@@ -32,11 +32,11 @@ These agents use **Bicep with Azure Verified Modules (AVM)** as the primary Infr
 - **Aligned with Microsoft roadmap**: Future-proof investment
 - **Validated modules**: AVM modules are tested and maintained by Microsoft
 
-## 🎯 Choosing the Right Agent
+## 🎯 Choosing the Right Mode
 
-We provide two complementary approaches:
+The Azure FSI Landing Zone agent supports two operational modes:
 
-### Mono-Agent (`azure-fsi-landingzone`)
+### Solo Mode (Default)
 **Best for:**
 - ✅ Quick template generation
 - ✅ Simple and focused tasks (e.g., "generate a hub-vnet template")
@@ -44,9 +44,9 @@ We provide two complementary approaches:
 - ✅ Lower cost (single agent invocation)
 - ✅ Simplicity over depth
 
-**Agent location**: [`/agents/azure-fsi-landingzone/`](../../agents/azure-fsi-landingzone/)
+**Usage**: `python agent.py` (default mode)
 
-### Multi-Agent Squad (`azure-fsi-landingzone-squad`)
+### Squad Mode (`--squad` flag)
 **Best for:**
 - ✅ Comprehensive security/compliance review
 - ✅ Expert analysis in multiple domains (DevOps, Security, Network, Architecture)
@@ -55,15 +55,17 @@ We provide two complementary approaches:
 - ✅ Parallel analysis for faster results on complex tasks
 - ✅ Cross-domain insights (e.g., security + network + DevOps)
 
-**Agent location**: [`/agents/azure-fsi-landingzone-squad/`](../../agents/azure-fsi-landingzone-squad/)
+**Usage**: `python agent.py --squad`
+
+**Agent location**: [`/agents/azure-fsi-landingzone/`](../../agents/azure-fsi-landingzone/)
 
 **See the [detailed comparison guide](guides/comparison.md) to help you choose.**
 
 ## 📚 Documentation
 
 ### Getting Started
-- **[Quick Start - Mono Agent](guides/quickstart-mono.md)**: Get started with the mono-agent in 10 minutes
-- **[Quick Start - Squad](guides/quickstart-squad.md)**: Get started with the multi-agent squad
+- **[Quick Start - Solo Mode](guides/quickstart-mono.md)**: Get started with solo mode in 10 minutes
+- **[Quick Start - Squad Mode](guides/quickstart-squad.md)**: Get started with squad mode
 - **[Complete Deployment Workflow](guides/workflow.md)**: Step-by-step production deployment guide
 
 ### Architecture Documentation
@@ -72,34 +74,34 @@ We provide two complementary approaches:
 - **[Milestones Mapping](architecture/milestones.md)**: How rings map to deployment milestones
 
 ### Reference
-- **[Comparison Guide](guides/comparison.md)**: Detailed comparison of mono-agent vs squad
-- **[Microsoft Alignment Analysis](guides/alignment.md)**: How these agents align with Microsoft FSI LZ
+- **[Comparison Guide](guides/comparison.md)**: Detailed comparison of solo mode vs squad mode
+- **[Microsoft Alignment Analysis](guides/alignment.md)**: How this agent aligns with Microsoft FSI LZ
 - **[Changelog](changelog.md)**: Version history and changes
 
 ## 🚀 Quick Examples
 
 ### Example 1: Generate a Hub VNet Template
 
-**Mono-Agent:**
+**Solo Mode:**
 ```bash
 cd agents/azure-fsi-landingzone
 python agent.py
 > "Generate a hub VNet template with Azure Firewall for Ring 0"
 ```
 
-**Squad:**
+**Squad Mode:**
 ```bash
-cd agents/azure-fsi-landingzone-squad
-python agent.py
+cd agents/azure-fsi-landingzone
+python agent.py --squad
 > "Generate and review a hub VNet template with security analysis"
 ```
 
 ### Example 2: Full Deployment Review
 
-**Squad (Recommended):**
+**Squad Mode (Recommended):**
 ```bash
-cd agents/azure-fsi-landingzone-squad
-python agent.py
+cd agents/azure-fsi-landingzone
+python agent.py --squad
 > "Review my entire FSI Landing Zone deployment for production readiness"
 ```
 The squad will:
@@ -110,15 +112,15 @@ The squad will:
 
 ## 🔑 Key Features
 
-### Common Features (Both Agents)
+### Common Features (Both Modes)
 - ✅ **Ring-Based Deployment**: Progressive rollout (Foundation → Platform → Workload)
 - ✅ **Compliance-Ready**: GDPR, DORA, PSD2, MiFID II, EBA GL policies
 - ✅ **Azure Verified Modules**: Production-ready Microsoft templates
 - ✅ **European Data Residency**: Default `francecentral` region
 - ✅ **Template Generation**: Bicep templates for all components
 
-### Squad-Only Features
-- ✅ **Specialist Expertise**: 4 specialized agents (DevOps, Security, Network, Architect)
+### Squad Mode Additional Features
+- ✅ **Specialist Expertise**: 4 specialized sub-agents (DevOps, Security, Network, Architect)
 - ✅ **Drift Detection**: Compare local templates with deployed Azure resources
 - ✅ **Parallel Analysis**: Faster results through concurrent agent execution
 - ✅ **Cross-Domain Insights**: Security + Network + DevOps perspectives

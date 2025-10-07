@@ -1,21 +1,21 @@
-# Mono-Agent vs Multi-Agent Squad: Comparison Guide
+# Solo Mode vs Squad Mode: Comparison Guide
 
 ## Overview
 
-This document compares the **mono-agent** approach (`azure-fsi-landingzone`) with the **multi-agent squad** approach (`azure-fsi-landingzone-squad`) for Azure FSI Landing Zone deployments.
+This document compares the **solo mode** (default) with the **squad mode** (`--squad` flag) for the Azure FSI Landing Zone agent.
 
 ---
 
 ## 🎯 Which One Should You Use?
 
-### Use **Mono-Agent** (`azure-fsi-landingzone`) when:
+### Use **Solo Mode** (default: `python agent.py`) when:
 - ✅ You need to **quickly generate templates**
 - ✅ Your task is **simple and focused** (e.g., "generate a hub-vnet template")
 - ✅ You prefer **simplicity** over depth
 - ✅ You want **lower cost** (single agent invocation)
 - ✅ You're **getting started** with FSI Landing Zones
 
-### Use **Multi-Agent Squad** (`azure-fsi-landingzone-squad`) when:
+### Use **Squad Mode** (`python agent.py --squad`) when:
 - ✅ You need **comprehensive security/compliance review**
 - ✅ You want **expert analysis** in multiple domains (DevOps, Security, Network, Architecture)
 - ✅ You need to **detect drift** between local templates and deployed infrastructure
@@ -27,10 +27,10 @@ This document compares the **mono-agent** approach (`azure-fsi-landingzone`) wit
 
 ## 📊 Feature Comparison
 
-| Feature | Mono-Agent | Multi-Agent Squad |
-|---------|------------|-------------------|
+| Feature | Solo Mode | Squad Mode |
+|---------|-----------|------------|
 | **Simplicity** | ⭐⭐⭐⭐⭐ Simple | ⭐⭐⭐ Moderate |
-| **Setup** | 1 agent | 1 orchestrator + 4 specialists |
+| **Setup** | 1 agent | 1 orchestrator + 4 sub-agents |
 | **Expertise Depth** | ⭐⭐⭐ Generalist | ⭐⭐⭐⭐⭐ Deep specialists |
 | **Template Generation** | ⭐⭐⭐⭐⭐ Fast | ⭐⭐⭐⭐⭐ Same speed |
 | **Security Analysis** | ⭐⭐⭐ Basic | ⭐⭐⭐⭐⭐ Expert-level |
@@ -38,8 +38,8 @@ This document compares the **mono-agent** approach (`azure-fsi-landingzone`) wit
 | **Drift Detection** | ⭐⭐⭐ Manual | ⭐⭐⭐⭐⭐ Automated |
 | **Parallelization** | ❌ Sequential | ✅ Parallel analysis |
 | **Cost** | ⭐⭐⭐⭐ Lower | ⭐⭐⭐ Higher (multiple invocations) |
-| **Maintenance** | ⭐⭐⭐⭐⭐ Single codebase | ⭐⭐⭐⭐ 5 agents to maintain |
-| **Extensibility** | ⭐⭐⭐ Add tools | ⭐⭐⭐⭐⭐ Add new specialist agents |
+| **Maintenance** | ⭐⭐⭐⭐⭐ Single codebase | ⭐⭐⭐⭐ 5 agents in one |
+| **Extensibility** | ⭐⭐⭐ Add tools | ⭐⭐⭐⭐⭐ Add new sub-agents |
 
 ---
 
@@ -47,7 +47,7 @@ This document compares the **mono-agent** approach (`azure-fsi-landingzone`) wit
 
 ### Example 1: Generate a Hub VNet Template
 
-**Mono-Agent:**
+**Solo Mode:**
 ```
 User: "Generate a hub-vnet template for Ring 0"
 Agent: [Generates Bicep template]
@@ -55,10 +55,10 @@ Time: ~30 seconds
 Quality: ⭐⭐⭐⭐⭐ Perfect for this task
 ```
 
-**Multi-Agent Squad:**
+**Squad Mode:**
 ```
 User: "Generate a hub-vnet template for Ring 0"
-Orchestrator: [Generates Bicep template] (same as mono-agent)
+Orchestrator: [Generates Bicep template] (same as solo mode)
 Time: ~30 seconds
 Quality: ⭐⭐⭐⭐⭐ Same result
 ```
@@ -69,7 +69,7 @@ Quality: ⭐⭐⭐⭐⭐ Same result
 
 ### Example 2: Review Security Configuration
 
-**Mono-Agent:**
+**Solo Mode:**
 ```
 User: "Review my Ring 0 security configuration"
 Agent:
@@ -86,7 +86,7 @@ Time: ~2 minutes
 Quality: ⭐⭐⭐ Correct but basic
 ```
 
-**Multi-Agent Squad:**
+**Squad Mode:**
 ```
 User: "Review my Ring 0 security configuration"
 Orchestrator → Security Specialist:
@@ -112,13 +112,13 @@ Time: ~2 minutes
 Quality: ⭐⭐⭐⭐⭐ Comprehensive, regulation-specific
 ```
 
-**Winner:** **Multi-Agent Squad** 🏆 - Much deeper analysis
+**Winner:** **Squad Mode** 🏆 - Much deeper analysis
 
 ---
 
 ### Example 3: Full Deployment Review (Ring 0 + 1 + 2)
 
-**Mono-Agent:**
+**Solo Mode:**
 ```
 User: "Review my entire FSI Landing Zone deployment"
 Agent:
@@ -130,7 +130,7 @@ Time: ~5-7 minutes (sequential)
 Quality: ⭐⭐⭐ Correct but may miss cross-domain issues
 ```
 
-**Multi-Agent Squad:**
+**Squad Mode:**
 ```
 User: "Review my entire FSI Landing Zone deployment"
 Orchestrator:
@@ -175,13 +175,13 @@ Time: ~3-4 minutes (parallel analysis)
 Quality: ⭐⭐⭐⭐⭐ Comprehensive, cross-domain, prioritized
 ```
 
-**Winner:** **Multi-Agent Squad** 🏆 - Faster + deeper + cross-domain insights
+**Winner:** **Squad Mode** 🏆 - Faster + deeper + cross-domain insights
 
 ---
 
 ### Example 4: Drift Detection (Local Templates vs Deployed)
 
-**Mono-Agent:**
+**Solo Mode:**
 ```
 User: "Check if my deployed infrastructure matches the templates"
 Agent:
@@ -195,7 +195,7 @@ Risk: ⚠️  May miss resources
 Quality: ⭐⭐⭐ Functional but manual
 ```
 
-**Multi-Agent Squad:**
+**Squad Mode:**
 ```
 User: "Check drift between templates and deployed infrastructure"
 Orchestrator:
@@ -238,54 +238,54 @@ Time: ~3 minutes (parallel checks)
 Quality: ⭐⭐⭐⭐⭐ Exhaustive, automated
 ```
 
-**Winner:** **Multi-Agent Squad** 🏆 - Comprehensive drift detection across all domains
+**Winner:** **Squad Mode** 🏆 - Comprehensive drift detection across all domains
 
 ---
 
 ## 💰 Cost Comparison
 
-### Mono-Agent
+### Solo Mode
 - **Per query**: 1 agent invocation
 - **Simple task**: ~$0.001 - $0.01
 - **Complex task**: ~$0.05 - $0.10
 
-### Multi-Agent Squad
-- **Per query**: 1 orchestrator + N specialists (typically 3-4)
-- **Simple task**: ~$0.001 - $0.01 (same as mono, delegates to 0 specialists)
-- **Complex task**: ~$0.15 - $0.30 (3-4 specialist invocations + orchestrator + architect)
+### Squad Mode
+- **Per query**: 1 orchestrator + N sub-agents (typically 3-4)
+- **Simple task**: ~$0.001 - $0.01 (same as solo, delegates to 0 sub-agents)
+- **Complex task**: ~$0.15 - $0.30 (3-4 sub-agent invocations + orchestrator + architect)
 
-**Cost difference**: Multi-agent is **2-3x more expensive** for complex tasks, but provides **5-10x more value** through deeper analysis.
+**Cost difference**: Squad mode is **2-3x more expensive** for complex tasks, but provides **5-10x more value** through deeper analysis.
 
 ---
 
 ## 🎓 Recommendation Strategy
 
-### Getting Started → Use Mono-Agent
+### Getting Started → Use Solo Mode
 When learning FSI Landing Zones:
 ```bash
 cd agents/azure-fsi-landingzone
 python agent.py
 ```
 
-### Pre-Production Review → Use Multi-Agent Squad
+### Pre-Production Review → Use Squad Mode
 Before deploying to UAT/PROD:
 ```bash
-cd agents/azure-fsi-landingzone-squad
-python orchestrator.py  # Not yet created, will be added
+cd agents/azure-fsi-landingzone
+python agent.py --squad
 ```
 
 ### Hybrid Approach (Best of Both)
-1. **Generation phase**: Use mono-agent for rapid template generation
-2. **Review phase**: Use multi-agent squad for comprehensive review
-3. **Deployment**: Use mono-agent for quick deployments
-4. **Audit**: Use multi-agent squad for compliance validation
+1. **Generation phase**: Use solo mode for rapid template generation
+2. **Review phase**: Use squad mode for comprehensive review
+3. **Deployment**: Use solo mode for quick deployments
+4. **Audit**: Use squad mode for compliance validation
 
 ---
 
 ## 📈 Performance Benchmarks
 
-| Task | Mono-Agent | Multi-Agent Squad | Winner |
-|------|------------|-------------------|--------|
+| Task | Solo Mode | Squad Mode | Winner |
+|------|-----------|------------|--------|
 | Generate 1 template | 30s | 30s | Tie |
 | Generate 5 templates | 2 min | 2 min | Tie |
 | Review security (Ring 0) | 2 min | 2 min | **Squad** (depth) |
@@ -297,40 +297,40 @@ python orchestrator.py  # Not yet created, will be added
 
 ## 🚀 Migration Path
 
-Already using mono-agent? Here's how to adopt multi-agent squad:
+Already using solo mode? Here's how to adopt squad mode:
 
-1. **Keep using mono-agent** for daily template generation
-2. **Try multi-agent squad** for your next security review
+1. **Keep using solo mode** for daily template generation
+2. **Try squad mode** (`--squad` flag) for your next security review
 3. **Compare results** side-by-side
-4. **Adopt squad** for pre-production and audit workflows
-5. **Stick with mono-agent** for quick, simple tasks
+4. **Adopt squad mode** for pre-production and audit workflows
+5. **Stick with solo mode** for quick, simple tasks
 
-You don't have to choose one or the other - use both!
+You don't have to choose one or the other - use both modes as needed!
 
 ---
 
 ## 🎯 Decision Matrix
 
-| Your Scenario | Recommended Agent |
+| Your Scenario | Recommended Mode |
 |---------------|-------------------|
-| "I need a quick VNet template" | **Mono-Agent** |
-| "Generate all Ring 0 templates" | **Mono-Agent** |
-| "Is my deployment secure?" | **Multi-Agent Squad** |
-| "Am I GDPR compliant?" | **Multi-Agent Squad** |
-| "Review before PROD deployment" | **Multi-Agent Squad** |
-| "Check drift from templates" | **Multi-Agent Squad** |
-| "Audit for compliance" | **Multi-Agent Squad** |
-| "Quick export of deployment plan" | **Mono-Agent** |
-| "Comprehensive architecture review" | **Multi-Agent Squad** |
+| "I need a quick VNet template" | **Solo Mode** |
+| "Generate all Ring 0 templates" | **Solo Mode** |
+| "Is my deployment secure?" | **Squad Mode** |
+| "Am I GDPR compliant?" | **Squad Mode** |
+| "Review before PROD deployment" | **Squad Mode** |
+| "Check drift from templates" | **Squad Mode** |
+| "Audit for compliance" | **Squad Mode** |
+| "Quick export of deployment plan" | **Solo Mode** |
+| "Comprehensive architecture review" | **Squad Mode** |
 
 ---
 
 ## 📚 See Also
 
-- [Mono-Agent README](../azure-fsi-landingzone/README.md)
-- [Multi-Agent Architecture](./MULTI-AGENT-ARCHITECTURE.md)
-- [Ring Architecture](./RING-ARCHITECTURE.md)
+- [Azure FSI Landing Zone Agent README](../../agents/azure-fsi-landingzone/README.md)
+- [Multi-Agent Architecture](../architecture/multi-agent.md)
+- [Ring Architecture](../architecture/rings.md)
 
 ---
 
-**TL;DR**: Use **mono-agent** for speed and simplicity. Use **multi-agent squad** for depth and compliance. Or use both! 🎉
+**TL;DR**: Use **solo mode** for speed and simplicity. Use **squad mode** for depth and compliance. Or use both modes! 🎉

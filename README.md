@@ -98,13 +98,14 @@ When using AI coding assistants with this repository, they'll automatically read
 - **🏗️ [agent-template](agents/agent-template/)**: Complete template for creating new agents with custom tools
 - **🎯 [example-agent](agents/example-agent/)**: Feature-rich example showing Claude Agent SDK capabilities
 
-### Azure FSI Landing Zone Agents
-- **🏦 [azure-fsi-landingzone](docs/azure-fsi/)**: Mono-agent for quick Azure FSI Landing Zone deployments
-- **👥 [azure-fsi-landingzone-squad](docs/azure-fsi/)**: Multi-agent squad with specialist expertise (Architect, DevOps, Security, Network)
+### Azure FSI Landing Zone Agent
+- **🏦 [azure-fsi-landingzone](docs/azure-fsi/)**: Azure FSI Landing Zone deployment agent with two operational modes:
+  - **Solo Mode** (default): Quick template generation and simple deployments
+  - **Squad Mode** (`--squad` flag): Multi-agent collaboration with specialist expertise (Architect, DevOps, Security, Network)
 
-**Choose between:**
-- **Mono-agent**: Best for quick template generation and simple deployments
-- **Squad**: Best for production readiness, compliance reviews, and expert analysis
+**Choose your mode:**
+- **Solo Mode**: Best for quick template generation and simple deployments
+- **Squad Mode**: Best for production readiness, compliance reviews, and expert analysis
 
 See the [Azure FSI Documentation](docs/azure-fsi/) for detailed comparison and guides.
 

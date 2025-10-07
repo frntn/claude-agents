@@ -66,22 +66,24 @@ Extends BaseClaudeAgent with:
 
 ## Available Agents
 
-### Azure FSI Landing Zone Agents
+### Azure FSI Landing Zone Agent
 
-Two complementary approaches for deploying Azure Financial Services Industry Landing Zones:
+An Azure Financial Services Industry Landing Zone deployment agent with two operational modes:
 
-#### 1. Mono-Agent (`azure-fsi-landingzone`)
+#### Solo Mode (Default)
 - **Purpose**: Quick template generation and simple deployments
 - **Best for**: Getting started, focused tasks, lower cost operations
-- **Documentation**: See [Azure FSI Documentation](../azure-fsi/README.md)
+- **Usage**: `python agent.py`
 
-#### 2. Multi-Agent Squad (`azure-fsi-landingzone-squad`)
-- **Purpose**: Expert-level analysis with specialized AI agents
+#### Squad Mode (`--squad` flag)
+- **Purpose**: Expert-level analysis with specialized AI sub-agents
 - **Team**: Architect, DevOps, Network, and Security specialists
 - **Best for**: Production deployments, compliance reviews, drift detection
-- **Documentation**: See [Azure FSI Documentation](../azure-fsi/README.md)
+- **Usage**: `python agent.py --squad`
 
-**Comparison**: See the [detailed comparison guide](../azure-fsi/guides/comparison.md) to choose the right approach.
+**Agent Location**: [`agents/azure-fsi-landingzone/`](../../agents/azure-fsi-landingzone/)
+**Documentation**: See [Azure FSI Documentation](../azure-fsi/README.md)
+**Comparison**: See the [detailed comparison guide](../azure-fsi/guides/comparison.md) to choose the right mode.
 
 ### Azure Compliance Checker
 Validates Azure infrastructure against industry compliance standards.
