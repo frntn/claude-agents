@@ -99,6 +99,17 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 - ✅ All templates validated with Azure CLI (`az bicep build`)
 - ✅ Centralized AVM manifest (`agents/azure-fsi-landingzone/avm-modules.yaml`) loaded by agent tools and templates
 
+#### Configuration Enhancements ✅ COMPLETED
+- ✅ **Environment Variable Support**: AZURE_LOCATION override from .env file
+
+**Status**: COMPLETED (2025-10-08)
+
+**Completed Deliverables**:
+- ✅ Added AZURE_LOCATION environment variable override to agent initialization
+- ✅ Follows configuration hierarchy: code defaults < config.yaml < environment variables
+- ✅ Updated agent.py to read and apply AZURE_LOCATION from .env file
+- ✅ Validated fix with tests confirming environment variable takes precedence
+
 ---
 
 ## 📋 Planned (Q1 2025)
@@ -233,6 +244,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ---
 
 ## 📝 Change Log
+
+### 2025-10-08: Environment Variable Configuration Support
+- ✅ Added AZURE_LOCATION environment variable override to agent initialization
+- ✅ Agent now respects .env file settings for Azure region (configuration hierarchy: code < config.yaml < env vars)
+- ✅ Fixed bug where AZURE_LOCATION was ignored in favor of hardcoded config.yaml value
 
 ### 2025-10-07: Azure Verified Modules (AVM) Integration
 - ✅ Implemented actual AVM module usage from Bicep Public Registry

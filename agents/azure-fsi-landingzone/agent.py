@@ -10,6 +10,7 @@ Landing Zones using:
 
 import asyncio
 import json
+import os
 import sys
 import argparse
 from pathlib import Path
@@ -46,6 +47,12 @@ class AzureFSILandingZoneAgent(InteractiveAgent):
         self.azure_config = self.agent_config.get('azure', {})
         self.compliance_config = self.azure_config.get('compliance', {})
         self.deployment_config = self.agent_config.get('deployment', {})
+
+        # Override config with environment variables (env vars take precedence)
+        if 'AZURE_LOCATION' in os.environ:
+            if 'landing_zone' not in self.azure_config:
+                self.azure_config['landing_zone'] = {}
+            self.azure_config['landing_zone']['default_region'] = os.getenv('AZURE_LOCATION')
 
         # Squad mode configuration
         self.squad_mode = squad_mode
