@@ -98,6 +98,7 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 - ✅ Changelog: `CHANGELOG_AVM.md`
 - ✅ All templates validated with Azure CLI (`az bicep build`)
 - ✅ Centralized AVM manifest (`agents/azure-fsi-landingzone/avm-modules.yaml`) loaded by agent tools and templates
+- ✅ Local linting workflow eliminates `no-unused-params` warnings in generated Bicep assets
 
 #### Configuration Enhancements ✅ COMPLETED
 - ✅ **Environment Variable Support**: AZURE_LOCATION override from .env file
@@ -121,6 +122,13 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 - ✅ Regenerated `policy-assignment.bicep` template to remove invalid references to built-in policies
 - ✅ Enforced TLS 1.2 policy parameter values to satisfy Azure compliance requirements
 - ✅ Documented improvements in roadmap for visibility
+
+#### Squad Mode Expansion ✅ COMPLETED (2025-10-09)
+- ✅ Added FinOps and Cloud PMO specialists aligned with landing zone squad guidance
+- ✅ Introduced validator specialist to apply lightweight Bicep linting without external CLI dependencies
+- ✅ Refactored orchestrator context sharing to include project paths for artifact-aware reviews
+- ✅ Expanded `run_squad_review` coverage (Security, Network, DevOps, FinOps, Validator, PMO) with Architect synthesis
+- ✅ Updated documentation, quickstarts, and tests to reflect the extended squad capabilities
 
 ---
 

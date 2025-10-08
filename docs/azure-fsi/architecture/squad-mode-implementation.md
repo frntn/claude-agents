@@ -19,12 +19,12 @@ Squad mode was exposed on the CLI (`--squad` flag) and 4 sub-agent packages exis
 
 ### Core Components Implemented
 
-#### 1. Orchestration Infrastructure ([agent.py:87-180](agents/azure-fsi-landingzone/agent.py#L87-180))
+#### 1. Orchestration Infrastructure (see `agent.py`)
 
-**4 Core Methods**:
+**Core Methods**:
 
 - **`_initialize_squad()`** - Lazy-loads sub-agents on-demand
-  - Imports: ArchitectSpecialistAgent, SecuritySpecialistAgent, NetworkSpecialistAgent, DevOpsSpecialistAgent
+  - Imports: ArchitectSpecialistAgent, SecuritySpecialistAgent, NetworkSpecialistAgent, DevOpsSpecialistAgent, FinOpsSpecialistAgent, CloudPmoSpecialistAgent, ValidatorSpecialistAgent
   - Connects all agents asynchronously
   - Only runs when `squad_mode=True`
 
@@ -44,23 +44,26 @@ Squad mode was exposed on the CLI (`--squad` flag) and 4 sub-agent packages exis
   - Identifies critical issues and cross-domain insights
   - Generates prioritized action plan
 
-#### 2. Delegation Tools ([agent.py:2553-2703](agents/azure-fsi-landingzone/agent.py#L2553-2703))
+#### 2. Delegation Tools (see `agent.py`)
 
-**5 Custom Tools** (only available when `squad_mode=True`):
+**8 Custom Tools** (only available when `squad_mode=True`):
 
 ```python
 @tool delegate_to_security(task, context)
 @tool delegate_to_network(task, context)
 @tool delegate_to_devops(task, context)
 @tool delegate_to_architect(task, context)
+@tool delegate_to_finops(task, context)
+@tool delegate_to_pmo(task, context)
+@tool delegate_to_validator(task, context)
 @tool run_squad_review(review_scope, context)
 ```
 
 Each tool:
 - Validates squad mode is enabled
-- Automatically shares project context (project_name, tier, environment)
-- Delegates to appropriate specialist
-- Returns formatted results
+- Automatically shares project context (project_name, tier, environment, resolved project_path)
+- Delegates to the appropriate specialist
+- Returns formatted results with role-specific emoji headers
 
 #### 3. Enhanced System Prompt ([agent.py:228-267](agents/azure-fsi-landingzone/agent.py#L228-267))
 
@@ -88,7 +91,7 @@ All delegation tools automatically pass:
 # User: "Review my entire deployment"
 # → run_squad_review() executes:
 
-specialists = ['security', 'network', 'devops']
+specialists = ['security', 'network', 'devops', 'finops', 'validator', 'pmo']
 results = await _parallel_analysis(specialists, task, context)
 synthesis = await _synthesize_results(results, context)
 ```
@@ -203,8 +206,14 @@ agents/azure-fsi-landingzone/
 │   │   └── agent.py           # SecuritySpecialistAgent
 │   ├── network/
 │   │   └── agent.py           # NetworkSpecialistAgent
-│   └── devops/
-│       └── agent.py           # DevOpsSpecialistAgent
+│   ├── devops/
+│   │   └── agent.py           # DevOpsSpecialistAgent
+│   ├── finops/
+│   │   └── agent.py           # FinOpsSpecialistAgent
+│   ├── pmo/
+│   │   └── agent.py           # CloudPmoSpecialistAgent
+│   └── validator/
+│       └── agent.py           # ValidatorSpecialistAgent
 └── test_squad_mode.py         # Validation test
 ```
 

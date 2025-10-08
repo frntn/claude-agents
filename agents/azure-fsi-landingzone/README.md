@@ -49,16 +49,19 @@ Example prompts:
 - You need drift detection between local templates and deployed infrastructure
 - You're preparing for production deployment or audit
 - You want parallel analysis for faster results on complex tasks
-- You need cross-domain insights (security + network + DevOps)
+- You need cross-domain insights (security + network + DevOps + FinOps + PMO)
 
 ## Squad Mode Features
 
 When running with `--squad`, you get access to specialist sub-agents:
 
-- 🏗️ **Architect Agent**: Holistic design and architectural recommendations
-- 🚀 **DevOps Agent**: CI/CD pipelines and deployment automation
-- 🔒 **Security Agent**: Security posture and compliance analysis
-- 🌐 **Network Agent**: Network design and connectivity review
+- 🏗️ **Architect Agent** — Holistic design and architectural recommendations
+- 🔒 **Security Agent** — Guardrails, IAM, and compliance evidence
+- 🌐 **Network Agent** — Hybrid connectivity and segmentation design
+- 🚀 **DevOps Agent** — CI/CD automation, pipelines, and IaC governance
+- 💰 **FinOps Agent** — Cost management, tagging strategy, and budgeting
+- 🧭 **Cloud PMO Agent** — Delivery governance, milestones, and stakeholder comms
+- 🧪 **Validator Agent** — Local Bicep linting and template quality checks
 
 ### How Squad Mode Works
 
@@ -68,10 +71,13 @@ The orchestrator agent coordinates specialist agents to provide multi-dimensiona
 User Request
      ↓
 Orchestrator
-     ├→ DevOps Agent   (parallel analysis)
-     ├→ Security Agent (parallel analysis)
-     ├→ Network Agent  (parallel analysis)
-     └→ Architect Agent (synthesizes all inputs)
+     ├→ Security Agent   (parallel analysis)
+     ├→ Network Agent    (parallel analysis)
+     ├→ DevOps Agent     (parallel analysis)
+     ├→ FinOps Agent     (parallel analysis)
+     ├→ Validator Agent  (parallel analysis)
+     ├→ Cloud PMO Agent  (parallel analysis)
+     └→ Architect Agent  (synthesizes all inputs)
      ↓
 Consolidated Report
 ```

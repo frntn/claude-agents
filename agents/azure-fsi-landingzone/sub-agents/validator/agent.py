@@ -8,7 +8,6 @@ outcome back to the orchestrator.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import AsyncIterator, Dict, Optional
 
@@ -16,6 +15,7 @@ from claude_agent_sdk import AssistantMessage, TextBlock
 
 from shared.utils.bicep_linter import lint_bicep_targets, format_lint_report
 from shared.utils.logging import get_logger
+from ..base import BaseSpecialistAgent
 
 
 class ValidatorSpecialistAgent:
@@ -48,7 +48,7 @@ class ValidatorSpecialistAgent:
         Task: <description>
         ```
         """
-        context, task = self._extract_context(prompt)
+        context, task = BaseSpecialistAgent._extract_context(prompt)
         project_path = self._resolve_project_path(context)
 
         if not project_path:
@@ -81,21 +81,6 @@ class ValidatorSpecialistAgent:
     # ------------------------------------------------------------------#
     # Helper methods
     # ------------------------------------------------------------------#
-
-    def _extract_context(self, prompt: str) -> tuple[Dict[str, object], str]:
-        """Parse context JSON and task description from orchestrator prompt."""
-        if not prompt.startswith("Context:"):
-            return {}, prompt.strip()
-
-        try:
-            context_part, task_part = prompt.split("\n\nTask:", maxsplit=1)
-            context_json = context_part.replace("Context:\n", "", 1).strip()
-            context: Dict[str, object] = json.loads(context_json) if context_json else {}
-            task = task_part.strip()
-            return context, task
-        except (ValueError, json.JSONDecodeError):
-            self.logger.warning("Validator specialist received malformed context: %s", prompt)
-            return {}, prompt.strip()
 
     def _resolve_project_path(self, context: Dict[str, object]) -> Optional[Path]:
         """Determine which directory should be linted."""

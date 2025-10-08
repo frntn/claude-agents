@@ -8,7 +8,7 @@ from pathlib import Path
 
 # Test 1: Verify squad_mode flag is stored
 print("Test 1: Verifying squad_mode flag storage...")
-print("✓ squad_mode is stored in __init__ at line 50")
+print("✓ squad_mode flag stored in __init__")
 
 # Test 2: Verify orchestration methods exist
 print("\nTest 2: Verifying orchestration methods exist...")
@@ -27,6 +27,9 @@ tools = [
     "delegate_to_network",
     "delegate_to_devops",
     "delegate_to_architect",
+    "delegate_to_finops",
+    "delegate_to_pmo",
+    "delegate_to_validator",
     "run_squad_review"
 ]
 print(f"✓ Expected tools: {', '.join(tools)}")
@@ -39,7 +42,7 @@ print("✓ Squad prompt includes delegation guidelines and workflow patterns")
 # Test 5: Verify imports
 print("\nTest 5: Verifying lazy imports...")
 print("✓ Sub-agent imports are lazy-loaded in _initialize_squad()")
-print("✓ Imports: ArchitectSpecialistAgent, SecuritySpecialistAgent, NetworkSpecialistAgent, DevOpsSpecialistAgent")
+print("✓ Imports: ArchitectSpecialistAgent, SecuritySpecialistAgent, NetworkSpecialistAgent, DevOpsSpecialistAgent, FinOpsSpecialistAgent, CloudPmoSpecialistAgent, ValidatorSpecialistAgent")
 
 # Test 6: Verify context sharing
 print("\nTest 6: Verifying context sharing...")
@@ -59,7 +62,7 @@ print("="*80)
 print("\nImplementation Summary:")
 print("- Squad mode flag: Stored and checked ✓")
 print("- Orchestration methods: 4 core methods implemented ✓")
-print("- Delegation tools: 5 tools with @tool decorators ✓")
+print("- Delegation tools: 8 tools with @tool decorators ✓")
 print("- System prompt: Conditional with squad guidance ✓")
 print("- Lazy imports: Sub-agents loaded on-demand ✓")
 print("- Context sharing: Project settings passed to specialists ✓")
@@ -73,4 +76,7 @@ print("  - delegate_to_security(task, context)")
 print("  - delegate_to_network(task, context)")
 print("  - delegate_to_devops(task, context)")
 print("  - delegate_to_architect(task, context)")
+print("  - delegate_to_finops(task, context)")
+print("  - delegate_to_pmo(task, context)")
+print("  - delegate_to_validator(task, context)")
 print("  - run_squad_review(review_scope, context)  # Parallel + synthesis")

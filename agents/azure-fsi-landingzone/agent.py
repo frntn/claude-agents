@@ -183,6 +183,9 @@ class AzureFSILandingZoneAgent(InteractiveAgent):
         from security.agent import SecuritySpecialistAgent
         from network.agent import NetworkSpecialistAgent
         from devops.agent import DevOpsSpecialistAgent
+        from finops.agent import FinOpsSpecialistAgent
+        from pmo.agent import CloudPmoSpecialistAgent
+        from validator.agent import ValidatorSpecialistAgent
 
         # Initialize sub-agents with same config directory
         sub_agents_dir = self.config_dir / "sub-agents"
@@ -191,7 +194,10 @@ class AzureFSILandingZoneAgent(InteractiveAgent):
             'architect': ArchitectSpecialistAgent(sub_agents_dir / "architect"),
             'security': SecuritySpecialistAgent(sub_agents_dir / "security"),
             'network': NetworkSpecialistAgent(sub_agents_dir / "network"),
-            'devops': DevOpsSpecialistAgent(sub_agents_dir / "devops")
+            'devops': DevOpsSpecialistAgent(sub_agents_dir / "devops"),
+            'finops': FinOpsSpecialistAgent(sub_agents_dir / "finops"),
+            'pmo': CloudPmoSpecialistAgent(sub_agents_dir / "pmo"),
+            'validator': ValidatorSpecialistAgent(sub_agents_dir / "validator"),
         }
 
         # Connect all sub-agents
@@ -348,6 +354,9 @@ You have access to specialist agents for deep domain analysis:
 - 🔒 Security Agent: Compliance (GDPR/DORA/PSD2), Key Vault, NSGs, Entra ID
 - 🌐 Network Agent: Hub-spoke topology, Firewall, Private Endpoints, VNet peering
 - 🚀 DevOps Agent: CI/CD pipelines, deployment automation, GitOps
+- 💰 FinOps Agent: Budgets, tagging standards, cost guardrails, chargeback
+- 🧭 Cloud PMO Agent: Delivery roadmap, stakeholder governance, risk tracking
+- 🧪 Validator Agent: Bicep linting, `no-unused-params` cleanup, diagnostics hygiene
 - 🏗️  Architect Agent: Cross-domain synthesis, best practices, cost optimization
 
 DELEGATION GUIDELINES:
@@ -356,12 +365,18 @@ DELEGATION GUIDELINES:
    - Security reviews → delegate_to_security
    - Network analysis → delegate_to_network
    - Pipeline/deployment → delegate_to_devops
+   - Cost governance → delegate_to_finops
+   - Delivery governance / dependencies → delegate_to_pmo
+   - Template linting & quality gates → delegate_to_validator
    - Comprehensive review → run_squad_review (all specialists + synthesis)
 
 2. **When to delegate**:
    - User asks for security/compliance review → Security Agent
    - User asks about network topology/connectivity → Network Agent
    - User asks about CI/CD or deployment automation → DevOps Agent
+   - User asks about cost, budgets, or tagging → FinOps Agent
+   - User asks for project plan, milestones, or risk register → Cloud PMO Agent
+   - User asks to clean lint warnings or validate templates → Validator Agent (run before sharing deployment commands)
    - User asks "review my deployment" → run_squad_review (parallel analysis)
 
 3. **Workflow patterns**:
@@ -369,7 +384,7 @@ DELEGATION GUIDELINES:
    - **Sequential**: For dependent tasks, chain delegate_to_* calls
    - **Synthesis**: Architect agent automatically synthesizes multi-agent results
 
-4. **Context sharing**: Pass project_name, tier, environment_type to specialists via context parameter
+4. **Context sharing**: Pass project_name, tier, environment_type, and project_path (if available) to specialists via context parameter
 
 Example:
 User: "Review my Ring 0 security for production"
@@ -377,6 +392,12 @@ User: "Review my Ring 0 security for production"
 
 User: "Review entire deployment for compliance"
 → Use run_squad_review (all agents in parallel + synthesis)
+
+User: "Ensure our cost model works for Ring 1 staging"
+→ Use delegate_to_finops with context: {ring: "ring1_platform", environment: "staging"}
+
+User: "Clean up lint warnings before deployment"
+→ Use delegate_to_validator (auto-runs linter; include project_path when available)
 """
             return base_prompt + squad_prompt
 
@@ -397,6 +418,30 @@ User: "Review entire deployment for compliance"
 
         results = lint_bicep_targets(lint_targets)
         return format_lint_report(results)
+
+    def _get_project_path_if_available(self) -> Optional[Path]:
+        """Return the project directory if the project name has been set."""
+        try:
+            return self.get_project_dir()
+        except ValueError:
+            return None
+
+    def _prepare_context_for_specialist(self, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Augment specialist context with shared project metadata."""
+        merged: Dict[str, Any] = dict(context or {})
+
+        if self.project_name and 'project_name' not in merged:
+            merged['project_name'] = self.project_name
+        if self.is_free_tier is not None and 'tier' not in merged:
+            merged['tier'] = 'free' if self.is_free_tier else 'standard'
+        if self.environment_type and 'environment' not in merged:
+            merged['environment'] = self.environment_type
+
+        project_path = self._get_project_path_if_available()
+        if project_path and 'project_path' not in merged:
+            merged['project_path'] = str(project_path)
+
+        return merged
 
     def get_custom_tools(self) -> List[Any]:
         """Get custom tools for this agent."""
@@ -434,6 +479,9 @@ User: "Review entire deployment for compliance"
                 self.delegate_to_network,
                 self.delegate_to_devops,
                 self.delegate_to_architect,
+                self.delegate_to_finops,
+                self.delegate_to_pmo,
+                self.delegate_to_validator,
                 self.run_squad_review,
             ])
 
@@ -2979,15 +3027,7 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
             }
 
         task = args.get("task", "")
-        context = args.get("context", {})
-
-        # Add current project context
-        if self.project_name:
-            context['project_name'] = self.project_name
-        if self.is_free_tier is not None:
-            context['tier'] = 'free' if self.is_free_tier else 'standard'
-        if self.environment_type:
-            context['environment'] = self.environment_type
+        context = self._prepare_context_for_specialist(args.get("context", {}))
 
         result = await self._delegate_to_specialist('security', task, context)
 
@@ -3004,15 +3044,7 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
             }
 
         task = args.get("task", "")
-        context = args.get("context", {})
-
-        # Add current project context
-        if self.project_name:
-            context['project_name'] = self.project_name
-        if self.is_free_tier is not None:
-            context['tier'] = 'free' if self.is_free_tier else 'standard'
-        if self.environment_type:
-            context['environment'] = self.environment_type
+        context = self._prepare_context_for_specialist(args.get("context", {}))
 
         result = await self._delegate_to_specialist('network', task, context)
 
@@ -3029,15 +3061,7 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
             }
 
         task = args.get("task", "")
-        context = args.get("context", {})
-
-        # Add current project context
-        if self.project_name:
-            context['project_name'] = self.project_name
-        if self.is_free_tier is not None:
-            context['tier'] = 'free' if self.is_free_tier else 'standard'
-        if self.environment_type:
-            context['environment'] = self.environment_type
+        context = self._prepare_context_for_specialist(args.get("context", {}))
 
         result = await self._delegate_to_specialist('devops', task, context)
 
@@ -3054,15 +3078,7 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
             }
 
         task = args.get("task", "")
-        context = args.get("context", {})
-
-        # Add current project context
-        if self.project_name:
-            context['project_name'] = self.project_name
-        if self.is_free_tier is not None:
-            context['tier'] = 'free' if self.is_free_tier else 'standard'
-        if self.environment_type:
-            context['environment'] = self.environment_type
+        context = self._prepare_context_for_specialist(args.get("context", {}))
 
         result = await self._delegate_to_specialist('architect', task, context)
 
@@ -3070,7 +3086,58 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
             "content": [{"type": "text", "text": f"🏗️  Architect Agent Analysis:\n\n{result}"}]
         }
 
-    @tool("run_squad_review", "Run a comprehensive multi-agent review with all specialists (Security, Network, DevOps) in parallel, then synthesize with Architect", {"review_scope": str, "context": dict})
+    @tool("delegate_to_finops", "Delegate cost governance and tagging review to the FinOps specialist agent", {"task": str, "context": dict})
+    async def delegate_to_finops(self, args):
+        """Delegate a FinOps/cost governance task to the FinOps specialist."""
+        if not self.squad_mode:
+            return {
+                "content": [{"type": "text", "text": "❌ Squad mode is not enabled. Use --squad flag to enable multi-agent collaboration."}]
+            }
+
+        task = args.get("task", "")
+        context = self._prepare_context_for_specialist(args.get("context", {}))
+
+        result = await self._delegate_to_specialist('finops', task, context)
+
+        return {
+            "content": [{"type": "text", "text": f"💰 FinOps Agent Analysis:\n\n{result}"}]
+        }
+
+    @tool("delegate_to_pmo", "Delegate delivery governance or program management tasks to the Cloud PMO specialist agent", {"task": str, "context": dict})
+    async def delegate_to_pmo(self, args):
+        """Delegate a program management or governance inquiry to the PMO specialist."""
+        if not self.squad_mode:
+            return {
+                "content": [{"type": "text", "text": "❌ Squad mode is not enabled. Use --squad flag to enable multi-agent collaboration."}]
+            }
+
+        task = args.get("task", "")
+        context = self._prepare_context_for_specialist(args.get("context", {}))
+
+        result = await self._delegate_to_specialist('pmo', task, context)
+
+        return {
+            "content": [{"type": "text", "text": f"🧭 PMO Agent Analysis:\n\n{result}"}]
+        }
+
+    @tool("delegate_to_validator", "Delegate Bicep linting and template quality checks to the Validator specialist agent", {"task": str, "context": dict})
+    async def delegate_to_validator(self, args):
+        """Delegate a linting/validation task to the Validator specialist."""
+        if not self.squad_mode:
+            return {
+                "content": [{"type": "text", "text": "❌ Squad mode is not enabled. Use --squad flag to enable multi-agent collaboration."}]
+            }
+
+        task = args.get("task", "Run Bicep lint review")
+        context = self._prepare_context_for_specialist(args.get("context", {}))
+
+        result = await self._delegate_to_specialist('validator', task, context)
+
+        return {
+            "content": [{"type": "text", "text": f"🧪 Validator Agent Report:\n\n{result}"}]
+        }
+
+    @tool("run_squad_review", "Run a comprehensive multi-agent review with all specialists (Security, Network, DevOps, FinOps, Validator, PMO) in parallel, then synthesize with Architect", {"review_scope": str, "context": dict})
     async def run_squad_review(self, args):
         """Run a comprehensive multi-agent review with parallel analysis and synthesis."""
         if not self.squad_mode:
@@ -3079,18 +3146,10 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
             }
 
         review_scope = args.get("review_scope", "Comprehensive deployment review")
-        context = args.get("context", {})
+        context = self._prepare_context_for_specialist(args.get("context", {}))
 
-        # Add current project context
-        if self.project_name:
-            context['project_name'] = self.project_name
-        if self.is_free_tier is not None:
-            context['tier'] = 'free' if self.is_free_tier else 'standard'
-        if self.environment_type:
-            context['environment'] = self.environment_type
-
-        # Run parallel analysis with Security, Network, and DevOps agents
-        specialists = ['security', 'network', 'devops']
+        # Run parallel analysis across the specialist team
+        specialists = ['security', 'network', 'devops', 'finops', 'validator', 'pmo']
         specialist_results = await self._parallel_analysis(specialists, review_scope, context)
 
         # Synthesize results with Architect agent
@@ -3102,17 +3161,19 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
 
         report += f"🔍 Review Scope: {review_scope}\n\n"
 
-        report += "🔒 SECURITY AGENT FINDINGS:\n"
-        report += "-" * 80 + "\n"
-        report += specialist_results['security'] + "\n\n"
+        section_titles = {
+            'security': "🔒 SECURITY AGENT FINDINGS",
+            'network': "🌐 NETWORK AGENT FINDINGS",
+            'devops': "🚀 DEVOPS AGENT FINDINGS",
+            'finops': "💰 FINOPS AGENT FINDINGS",
+            'validator': "🧪 VALIDATOR AGENT FINDINGS",
+            'pmo': "🧭 PMO AGENT FINDINGS",
+        }
 
-        report += "🌐 NETWORK AGENT FINDINGS:\n"
-        report += "-" * 80 + "\n"
-        report += specialist_results['network'] + "\n\n"
-
-        report += "🚀 DEVOPS AGENT FINDINGS:\n"
-        report += "-" * 80 + "\n"
-        report += specialist_results['devops'] + "\n\n"
+        for specialist in specialists:
+            report += section_titles.get(specialist, specialist.upper()) + ":\n"
+            report += "-" * 80 + "\n"
+            report += specialist_results.get(specialist, "No response.") + "\n\n"
 
         report += "🏗️  ARCHITECT SYNTHESIS:\n"
         report += "=" * 80 + "\n"
