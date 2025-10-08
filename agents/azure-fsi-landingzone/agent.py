@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from shared.agents import InteractiveAgent
 from shared.utils import setup_logging
+from shared.utils.bicep_linter import lint_bicep_targets, format_lint_report
 from claude_agent_sdk import tool, AssistantMessage, TextBlock
 
 
@@ -305,6 +306,7 @@ IMPORTANT: Before generating any files (templates, plans, etc.), you MUST:
 1. Ask the user for a project name (use set_project_name tool)
 2. Ask if the subscription is Free Tier or Standard (use detect_subscription_tier tool)
 3. Ask what environment type they want (dev/test/staging/prod/sandbox) (use set_environment_type tool)
+4. After creating or updating any Bicep template, run run_bicep_linter to auto-fix lint warnings before sharing deployment commands
 
 These settings will be propagated to all sub-agents (Architect, DevOps, Network, Security).
 
@@ -380,6 +382,22 @@ User: "Review entire deployment for compliance"
 
         return base_prompt
 
+    def _run_bicep_linter(self, targets: Optional[List[Path]] = None) -> str:
+        """Run the lightweight Bicep linter on provided targets or current project."""
+        lint_targets: List[Path] = []
+
+        if targets:
+            lint_targets.extend(targets)
+        else:
+            try:
+                project_dir = self.get_project_dir()
+            except ValueError:
+                return "❌ Project name not set. Use set_project_name before running the linter."
+            lint_targets.append(project_dir)
+
+        results = lint_bicep_targets(lint_targets)
+        return format_lint_report(results)
+
     def get_custom_tools(self) -> List[Any]:
         """Get custom tools for this agent."""
         base_tools = [
@@ -396,6 +414,7 @@ User: "Review entire deployment for compliance"
             self.get_fsi_compliance_requirements,
             self.list_avm_modules,
             self.generate_bicep_template,
+            self.run_bicep_linter_tool,
             self.validate_deployment,
             self.apply_compliance_policies,
             self.get_deployment_status,
@@ -1359,16 +1378,58 @@ main
         with open(template_path, 'w') as f:
             f.write(bicep_content)
 
+        lint_results = lint_bicep_targets([template_path])
+        lint_report = format_lint_report(lint_results)
+
+        preview_content = template_path.read_text()
+        truncated_preview = preview_content
+        ellipsis = ""
+        if len(preview_content) > 500:
+            truncated_preview = preview_content[:500]
+            ellipsis = "..."
+        if not truncated_preview.endswith("\n"):
+            truncated_preview += "\n"
+
         result_text = f"✅ Generated Bicep template for: {component}\n\n"
         result_text += f"📄 Saved to: {template_path}\n\n"
+        result_text += f"{lint_report}\n\n"
         result_text += "Template Preview:\n"
         result_text += "```bicep\n"
-        result_text += bicep_content[:500] + "...\n"
+        result_text += truncated_preview + ellipsis
+        if ellipsis:
+            result_text += "\n"
         result_text += "```\n"
 
         return {
             "content": [
                 {"type": "text", "text": result_text}
+            ]
+        }
+
+    @tool("run_bicep_linter", "Run the built-in Bicep linter and auto-fix common warnings", {"path": str})
+    async def run_bicep_linter_tool(self, args):
+        """Run the lightweight Bicep linter on the current project or a specific path."""
+        path_arg = args.get("path")
+        targets: Optional[List[Path]] = None
+
+        if path_arg:
+            candidate = Path(path_arg).expanduser()
+            if not candidate.is_absolute():
+                candidate = self.config_dir / candidate
+
+            if not candidate.exists():
+                return {
+                    "content": [
+                        {"type": "text", "text": f"❌ Path not found: {candidate}"}
+                    ]
+                }
+
+            targets = [candidate]
+
+        report = self._run_bicep_linter(targets)
+        return {
+            "content": [
+                {"type": "text", "text": report}
             ]
         }
 
@@ -2414,6 +2475,9 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
         with open(template_path, 'w') as f:
             f.write(bicep_content)
 
+        lint_results = lint_bicep_targets([template_path])
+        lint_report = format_lint_report(lint_results)
+
         result_text = f"✅ Generated Azure Bastion template\n\n"
         result_text += f"📄 Saved to: {template_path}\n\n"
         result_text += "🔒 Features:\n"
@@ -2423,6 +2487,7 @@ output bastionDnsName string = bastionPublicIP.properties.dnsSettings.fqdn
         result_text += "   • Shareable links disabled (security)\n"
         result_text += "   • 365-day audit log retention\n"
         result_text += "   • Diagnostic settings configured\n\n"
+        result_text += f"{lint_report}\n\n"
         result_text += "💡 Deployment:\n"
         result_text += f"   az deployment group create \\\n"
         result_text += f"     --resource-group <hub-rg> \\\n"
