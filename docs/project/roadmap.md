@@ -110,6 +110,18 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 - ✅ Updated agent.py to read and apply AZURE_LOCATION from .env file
 - ✅ Validated fix with tests confirming environment variable takes precedence
 
+#### Policy Baseline Hardening ✅ COMPLETED
+- ✅ **Custom Policy Definitions**: Added diagnostics, storage TLS 1.2, Key Vault soft delete, and public IP denial baselines
+- ✅ **Parameter Safety**: Policy assignments now supply required parameters to avoid deployment-time failures
+- ✅ **Template Outputs**: Exposed assignment and definition IDs for downstream automation
+
+**Status**: COMPLETED (2025-10-08)
+
+**Completed Deliverables**:
+- ✅ Regenerated `policy-assignment.bicep` template to remove invalid references to built-in policies
+- ✅ Enforced TLS 1.2 policy parameter values to satisfy Azure compliance requirements
+- ✅ Documented improvements in roadmap for visibility
+
 ---
 
 ## 📋 Planned (Q1 2025)
