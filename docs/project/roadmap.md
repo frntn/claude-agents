@@ -53,6 +53,7 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 
 ### Developer Experience (Week 2)
 - [x] Adopted uv-based Python environment workflow with automatic `uv.lock` generation and reuse (setup script + docs updated)
+- ✅ Added Makefile task shortcuts for setup and testing (2025-10-08)
 
 ---
 
@@ -264,6 +265,15 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ---
 
 ## 📝 Change Log
+
+### 2025-10-08: Makefile Task Automation
+- ✅ Introduced root `Makefile` with shortcuts for setup, pytest suite, and Azure FSI Landing Zone checks
+- ✅ Documented `Makefile` usage in `README.md`
+- ✅ Added aggregated targets for AVM template validation and squad mode smoke tests
+
+### 2025-10-08: Policy Template Validation Fix
+- ✅ Updated policy baseline Bicep to use runtime parameter expressions compatible with `az bicep build`
+- ✅ Resolved `parameters()` function usage that blocked template validation during `make test-azure-fsi`
 
 ### 2025-10-08: Environment Variable Configuration Support
 - ✅ Added AZURE_LOCATION environment variable override to agent initialization

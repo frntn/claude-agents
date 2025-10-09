@@ -92,6 +92,15 @@ When using AI coding assistants with this repository, they'll automatically read
   ```
 - Commit `uv.lock` so teammates and CI get identical environments.
 
+## Makefile Tasks
+
+Common workflows are exposed via the root `Makefile`:
+
+- Run `make help` to list available commands.
+- Use `make setup` for the bootstrap script.
+- Run `make test` for the primary pytest suite in `tests/`.
+- Run `make test-azure-fsi` to execute the Azure FSI Landing Zone checks, including AVM template validation.
+
 ## Available Agents
 
 ### Templates & Examples
