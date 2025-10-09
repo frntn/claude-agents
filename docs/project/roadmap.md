@@ -270,6 +270,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 - ✅ Introduced root `Makefile` with shortcuts for setup, pytest suite, and Azure FSI Landing Zone checks
 - ✅ Documented `Makefile` usage in `README.md`
 - ✅ Added aggregated targets for AVM template validation and squad mode smoke tests
+- ✅ Added environment toggles (`AZURE_BICEP_BUILD_TIMEOUT`, `AZURE_BICEP_KEEP_TEMPLATES`) so AVM template tests handle slower `az bicep build` runs
 
 ### 2025-10-08: Policy Template Validation Fix
 - ✅ Updated policy baseline Bicep to use runtime parameter expressions compatible with `az bicep build`

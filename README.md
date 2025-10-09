@@ -100,6 +100,7 @@ Common workflows are exposed via the root `Makefile`:
 - Use `make setup` for the bootstrap script.
 - Run `make test` for the primary pytest suite in `tests/`.
 - Run `make test-azure-fsi` to execute the Azure FSI Landing Zone checks, including AVM template validation.
+- Override `AZURE_BICEP_BUILD_TIMEOUT` when running `make test-azure-fsi` if `az bicep build` needs more than the default 120 seconds, and set `AZURE_BICEP_KEEP_TEMPLATES=1` to keep rendered `.bicep`/`.json` files for debugging.
 
 ## Available Agents
 

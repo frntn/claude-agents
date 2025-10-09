@@ -3,16 +3,41 @@
 Test script to generate and validate AVM-based Bicep templates.
 """
 
-import sys
 import os
-import tempfile
 import subprocess
+import sys
+import tempfile
 from pathlib import Path
 
 # Add parent directory to path to import agent module
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from agent import AzureFSILandingZoneAgent
+
+BICEP_BUILD_TIMEOUT = int(os.environ.get("AZURE_BICEP_BUILD_TIMEOUT", "120"))
+KEEP_GENERATED_TEMPLATES = os.environ.get("AZURE_BICEP_KEEP_TEMPLATES", "").lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+
+
+def _cleanup_temp_file(path: str) -> None:
+    """Remove temp bicep/json artifacts unless retention requested."""
+    json_path = path.replace(".bicep", ".json")
+    if KEEP_GENERATED_TEMPLATES:
+        print(f"ℹ️  Temporary file retained: {path}")
+        if os.path.exists(json_path):
+            print(f"ℹ️  Generated JSON retained: {json_path}")
+        return
+
+    for p in (path, json_path):
+        if os.path.exists(p):
+            try:
+                os.unlink(p)
+            except OSError as exc:
+                print(f"⚠️  Unable to delete {p}: {exc}")
 
 
 def validate_bicep_template(template_content: str, template_name: str) -> bool:
@@ -32,7 +57,7 @@ def validate_bicep_template(template_content: str, template_name: str) -> bool:
             ['az', 'bicep', 'build', '--file', temp_path],
             capture_output=True,
             text=True,
-            timeout=30
+            timeout=BICEP_BUILD_TIMEOUT
         )
 
         if result.returncode == 0:
@@ -43,15 +68,17 @@ def validate_bicep_template(template_content: str, template_name: str) -> bool:
             print(f"Error: {result.stderr}")
             return False
 
+    except subprocess.TimeoutExpired:
+        print(
+            f"❌ {template_name}: az bicep build timed out after "
+            f"{BICEP_BUILD_TIMEOUT} seconds; set AZURE_BICEP_BUILD_TIMEOUT to override."
+        )
+        return False
     except Exception as e:
         print(f"❌ {template_name}: Exception during validation: {e}")
         return False
     finally:
-        # Cleanup
-        os.unlink(temp_path)
-        json_path = temp_path.replace('.bicep', '.json')
-        if os.path.exists(json_path):
-            os.unlink(json_path)
+        _cleanup_temp_file(temp_path)
 
 
 def main():
