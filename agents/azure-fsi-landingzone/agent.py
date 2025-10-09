@@ -1799,7 +1799,7 @@ resource diagnosticLogsPolicy 'Microsoft.Authorization/policyDefinitions@2024-04
         allOf: [
           {
             field: 'type'
-            in: parameters('listOfResourceTypes')
+            in: 'parameters(listOfResourceTypes)'
           }
         ]
       }
@@ -1930,7 +1930,7 @@ resource storageMinimumTlsPolicy 'Microsoft.Authorization/policyDefinitions@2024
           }
           {
             field: 'Microsoft.Storage/storageAccounts/minimumTlsVersion'
-            notEquals: parameters('minimumTlsVersion')
+            notEquals: 'parameters(minimumTlsVersion)'
           }
         ]
       }
