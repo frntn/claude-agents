@@ -3193,9 +3193,9 @@ async def main():
         description="Azure FSI Landing Zone Deployment Agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Examples:
-  python agent.py              # Run in solo mode (default)
-  python agent.py --squad      # Run in squad mode with specialist sub-agents
+    Examples:
+    python agent.py              # Run in solo mode (default)
+    python agent.py --squad      # Run in squad mode with specialist sub-agents
         """
     )
     parser.add_argument(
