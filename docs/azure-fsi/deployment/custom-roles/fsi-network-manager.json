@@ -1,0 +1,39 @@
+{
+  "Name": "FSI Network Manager",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Manage virtual networks, NSGs, firewall rules, and connectivity for FSI landing zone",
+  "Actions": [
+    "Microsoft.Network/virtualNetworks/read",
+    "Microsoft.Network/virtualNetworks/write",
+    "Microsoft.Network/virtualNetworks/delete",
+    "Microsoft.Network/virtualNetworks/subnets/*",
+    "Microsoft.Network/virtualNetworks/virtualNetworkPeerings/*",
+    "Microsoft.Network/networkSecurityGroups/*",
+    "Microsoft.Network/azureFirewalls/*",
+    "Microsoft.Network/firewallPolicies/*",
+    "Microsoft.Network/bastionHosts/read",
+    "Microsoft.Network/publicIPAddresses/read",
+    "Microsoft.Network/publicIPAddresses/write",
+    "Microsoft.Network/routeTables/*",
+    "Microsoft.Network/privateDnsZones/*",
+    "Microsoft.Network/privateEndpoints/*",
+    "Microsoft.Network/networkInterfaces/read",
+    "Microsoft.Network/loadBalancers/read",
+    "Microsoft.Network/applicationGateways/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/deployments/read",
+    "Microsoft.Insights/diagnosticSettings/*"
+  ],
+  "NotActions": [
+    "Microsoft.Network/ddosProtectionPlans/write",
+    "Microsoft.Network/ddosProtectionPlans/delete",
+    "Microsoft.Network/virtualNetworkGateways/write",
+    "Microsoft.Network/virtualNetworkGateways/delete"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/<SUBSCRIPTION-ID>"
+  ]
+}

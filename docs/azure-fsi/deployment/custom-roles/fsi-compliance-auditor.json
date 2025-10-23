@@ -1,0 +1,24 @@
+{
+  "Name": "FSI Compliance Auditor",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Read-only access to all FSI landing zone resources and compliance data for auditing",
+  "Actions": [
+    "*/read",
+    "Microsoft.PolicyInsights/*",
+    "Microsoft.Security/*/read",
+    "Microsoft.OperationalInsights/workspaces/query/read",
+    "Microsoft.Authorization/policyAssignments/read",
+    "Microsoft.Authorization/policyDefinitions/read",
+    "Microsoft.Authorization/roleAssignments/read",
+    "Microsoft.Authorization/roleDefinitions/read",
+    "Microsoft.CostManagement/*/read",
+    "Microsoft.Consumption/*/read"
+  ],
+  "NotActions": [],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/<SUBSCRIPTION-ID>"
+  ]
+}

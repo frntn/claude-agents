@@ -1,0 +1,35 @@
+{
+  "Name": "FSI Security Operator",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Manage Microsoft Defender, Azure Policies, and security monitoring for FSI compliance",
+  "Actions": [
+    "Microsoft.Security/*",
+    "Microsoft.Authorization/policyAssignments/read",
+    "Microsoft.Authorization/policyAssignments/write",
+    "Microsoft.Authorization/policyDefinitions/read",
+    "Microsoft.Authorization/policyDefinitions/write",
+    "Microsoft.Authorization/policySetDefinitions/read",
+    "Microsoft.Authorization/policySetDefinitions/write",
+    "Microsoft.PolicyInsights/*",
+    "Microsoft.OperationalInsights/workspaces/read",
+    "Microsoft.OperationalInsights/workspaces/query/read",
+    "Microsoft.Insights/alertRules/*",
+    "Microsoft.Insights/diagnosticSettings/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/deployments/read",
+    "Microsoft.KeyVault/vaults/read",
+    "Microsoft.Network/networkSecurityGroups/read",
+    "Microsoft.Network/azureFirewalls/read",
+    "Microsoft.Compute/virtualMachines/read",
+    "Microsoft.Storage/storageAccounts/read"
+  ],
+  "NotActions": [
+    "Microsoft.Security/pricings/delete"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/<SUBSCRIPTION-ID>"
+  ]
+}

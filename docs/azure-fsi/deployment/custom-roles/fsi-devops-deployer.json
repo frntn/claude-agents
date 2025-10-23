@@ -1,0 +1,43 @@
+{
+  "Name": "FSI DevOps Deployer",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Deploy and manage application resources in spoke VNets for DevOps pipelines",
+  "Actions": [
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/deployments/*",
+    "Microsoft.Web/sites/*",
+    "Microsoft.Web/serverfarms/*",
+    "Microsoft.ContainerRegistry/registries/read",
+    "Microsoft.ContainerRegistry/registries/pull/read",
+    "Microsoft.ContainerRegistry/registries/push/write",
+    "Microsoft.ContainerService/managedClusters/read",
+    "Microsoft.ContainerService/managedClusters/listClusterAdminCredential/action",
+    "Microsoft.Compute/virtualMachines/read",
+    "Microsoft.Compute/virtualMachines/write",
+    "Microsoft.Compute/disks/*",
+    "Microsoft.Storage/storageAccounts/read",
+    "Microsoft.Storage/storageAccounts/blobServices/*",
+    "Microsoft.Storage/storageAccounts/queueServices/*",
+    "Microsoft.Network/virtualNetworks/read",
+    "Microsoft.Network/virtualNetworks/subnets/read",
+    "Microsoft.Network/networkInterfaces/*",
+    "Microsoft.Network/publicIPAddresses/read",
+    "Microsoft.Network/loadBalancers/read",
+    "Microsoft.Insights/diagnosticSettings/*",
+    "Microsoft.OperationalInsights/workspaces/read"
+  ],
+  "NotActions": [
+    "Microsoft.Network/virtualNetworks/write",
+    "Microsoft.Network/virtualNetworks/delete",
+    "Microsoft.Network/networkSecurityGroups/write",
+    "Microsoft.Network/networkSecurityGroups/delete",
+    "Microsoft.Authorization/roleAssignments/*"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/rg-<project>-app-<env>",
+    "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/rg-<project>-devops-<env>"
+  ]
+}

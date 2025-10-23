@@ -1,0 +1,49 @@
+{
+  "Name": "FSI Landing Zone Deployer",
+  "Id": null,
+  "IsCustom": true,
+  "Description": "Deploy and manage Azure FSI Landing Zone infrastructure with least privilege",
+  "Actions": [
+    "Microsoft.Resources/subscriptions/resourceGroups/read",
+    "Microsoft.Resources/subscriptions/resourceGroups/write",
+    "Microsoft.Resources/subscriptions/resourceGroups/delete",
+    "Microsoft.Resources/deployments/*",
+    "Microsoft.Network/virtualNetworks/*",
+    "Microsoft.Network/networkSecurityGroups/*",
+    "Microsoft.Network/azureFirewalls/*",
+    "Microsoft.Network/bastionHosts/*",
+    "Microsoft.Network/virtualNetworkPeerings/*",
+    "Microsoft.Network/privateDnsZones/*",
+    "Microsoft.Network/ddosProtectionPlans/*",
+    "Microsoft.Network/publicIPAddresses/*",
+    "Microsoft.KeyVault/vaults/*",
+    "Microsoft.KeyVault/vaults/secrets/*",
+    "Microsoft.OperationalInsights/workspaces/*",
+    "Microsoft.Storage/storageAccounts/*",
+    "Microsoft.Security/pricings/write",
+    "Microsoft.Security/securityContacts/write",
+    "Microsoft.Authorization/policyAssignments/*",
+    "Microsoft.Authorization/policyDefinitions/*",
+    "Microsoft.Authorization/roleAssignments/read",
+    "Microsoft.Authorization/roleAssignments/write",
+    "Microsoft.Authorization/roleAssignments/delete",
+    "Microsoft.ManagedIdentity/userAssignedIdentities/*",
+    "Microsoft.Consumption/budgets/*",
+    "Microsoft.CostManagement/budgets/*",
+    "Microsoft.Insights/diagnosticSettings/*",
+    "Microsoft.Insights/logProfiles/*"
+  ],
+  "NotActions": [
+    "Microsoft.Authorization/roleDefinitions/write",
+    "Microsoft.Authorization/roleDefinitions/delete",
+    "Microsoft.Authorization/classicAdministrators/*",
+    "Microsoft.Authorization/denyAssignments/*",
+    "Microsoft.Blueprint/blueprintAssignments/write",
+    "Microsoft.Blueprint/blueprintAssignments/delete"
+  ],
+  "DataActions": [],
+  "NotDataActions": [],
+  "AssignableScopes": [
+    "/subscriptions/<SUBSCRIPTION-ID>"
+  ]
+}
