@@ -62,13 +62,13 @@ modules:
     display_name: "Network Security Group"
     registry: "br/public:avm/res/network/network-security-group"
     version: "0.5.2"
-    status: "planned"
     description: "Network Security Group with Azure best-practice rules"
-    use_case: "Subnet and NIC-level traffic filtering"
+    use_case: "Subnet and NIC-level traffic filtering for FSI workloads"
     key_features:
-      - "Allow/deny rule definitions"
-      - "Service tag usage"
-      - "Application security group support"
+      - "FSI-compliant security rules (deny Internet, allow VNet)"
+      - "Diagnostic logging for compliance auditing"
+      - "Service tag and ASG support"
+      - "Built-in deny rules for data exfiltration protection"
 
   security_center:
     display_name: "Microsoft Defender for Cloud"
