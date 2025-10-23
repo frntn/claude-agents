@@ -154,12 +154,49 @@ az role assignment create --assignee <OBJECT-ID> --role "Reader" --scope "/subsc
 ☐ Verify assignments
 ```
 
+Note: Prefer scoping "Network Contributor" to the hub networking resource group for least privilege (see Resource Group-Level Assignments below). Keep subscription-level "Reader" for cross-RG troubleshooting.
+
 **Auditors:**
 ```bash
 az role assignment create --assignee <OBJECT-ID> --role "Reader" --scope "/subscriptions/<SUBSCRIPTION-ID>"
 ```
 ```
 ☐ Assign role to AZ-FSI-Auditors
+☐ Verify assignments
+```
+
+**Emergency Responders (PIM-eligible):**
+```
+Configure via Entra ID Privileged Identity Management (PIM):
+☐ Eligible role: Owner on the subscription
+☐ Max activation duration: 4 hours
+☐ Approval required: Yes (security leadership)
+☐ MFA and justification required: Yes
+```
+Note: Do not grant permanent Owner. Use time-bound eligibility in PIM to satisfy incident response needs while maintaining strong governance.
+
+#### Resource Group-Level Assignments
+
+Align RG scoping with the ring-based architecture (hub/shared, devops, app). This enforces least privilege and clear ownership boundaries.
+
+**DevOps Team:**
+```bash
+az role assignment create --assignee <OBJECT-ID> --role "Contributor" --scope "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/rg-<project>-devops-<env>"
+az role assignment create --assignee <OBJECT-ID> --role "Contributor" --scope "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/rg-<project>-app-<env>"
+```
+```
+☐ Assign roles to AZ-FSI-DevOps-Team
+☐ Verify assignments
+```
+Note: Key Vault data-plane access for pipelines ("Key Vault Secrets User") is covered later in Phase 5 (Key Vault RBAC).
+
+**Application Developers:**
+```bash
+az role assignment create --assignee <OBJECT-ID> --role "Reader" --scope "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/rg-<project>-hub-networking-<env>"
+az role assignment create --assignee <OBJECT-ID> --role "Contributor" --scope "/subscriptions/<SUBSCRIPTION-ID>/resourceGroups/rg-<project>-app-<env>"
+```
+```
+☐ Assign roles to AZ-FSI-App-Developers
 ☐ Verify assignments
 ```
 

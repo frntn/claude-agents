@@ -259,6 +259,24 @@ When you select rings, the agent will warn you if dependencies are missing.
 
 You can customize the ring configuration in `config.yaml`:
 
+---
+
+## Naming Conventions
+
+### Resource Group Names
+
+- rg-<project>-hub-networking-<env> - Ring 0 hub VNet, firewall, bastion, DNS
+- rg-<project>-security-<env> - Ring 0 security services (e.g., core Key Vault)
+- rg-<project>-monitoring-<env> - Ring 0 monitoring (Log Analytics, diagnostics)
+- rg-<project>-devops-<env> - Ring 1 platform tooling (ACR, shared KV for pipelines)
+- rg-<project>-app-<env> - Ring 2 application workloads
+
+Notes
+- <project>: short identifier for the landing zone/project (e.g., "demo", "bankx")
+- <env>: one of dev, test, staging, prod, sandbox
+- This convention is referenced by RBAC quickstart and RBAC specification for role scopes.
+- Works for single or multi-subscription setups; apply per target subscription.
+
 - Add/remove components from each ring
 - Change mandatory/optional flags
 - Modify deployment depth filters

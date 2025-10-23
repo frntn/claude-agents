@@ -35,6 +35,9 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 - ✅ **Documentation**: README, QUICKSTART, ALIGNMENT analysis
 - ✅ **Configuration**: Comprehensive YAML with all FSI requirements
 
+### Documentation Updates (October 2025)
+- ✅ RBAC Quickstart aligned with specification: added Resource Group-level assignments and Emergency Responders (PIM) guidance (2025-10-23)
+
 ### Azure Compliance Checker Agent (Week 2)
 - ✅ **Created**: Automated compliance validation agent
 - ✅ **10 Custom Tools**: Checklist management, validation, reporting
