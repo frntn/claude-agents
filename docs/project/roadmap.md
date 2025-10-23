@@ -37,6 +37,7 @@ Build a comprehensive collection of production-ready Claude agents for enterpris
 
 ### Documentation Updates (October 2025)
 - ✅ RBAC Quickstart aligned with specification: added Resource Group-level assignments and Emergency Responders (PIM) guidance (2025-10-23)
+- ✅ Onboarding tutorial (FR) — Added 5‑day learning path under `docs/learn` with capstone checklist (2025-10-23)
 
 ### Azure Compliance Checker Agent (Week 2)
 - ✅ **Created**: Automated compliance validation agent
@@ -268,6 +269,14 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ---
 
 ## 📝 Change Log
+
+### 2025-10-23: Onboarding Tutorial (FR)
+- ✅ Created `docs/learn/` with:
+  - `README.md` (vue d'ensemble et objectifs)
+  - 5 modules quotidiens (fondamentaux, identité/gouvernance, réseau/rings, IaC Bicep/AVM, conformité/licences/coûts)
+  - `capstone-checklist.md` (validation de fin de semaine)
+- ✅ Cross‑links vers docs existantes (rings, RBAC Quickstart, AVM usage, compliance agent)
+- ✅ Aligné avec AGENTS.md (docs centralisées, pas de duplication)
 
 ### 2025-10-08: Makefile Task Automation
 - ✅ Introduced root `Makefile` with shortcuts for setup, pytest suite, and Azure FSI Landing Zone checks
