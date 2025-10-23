@@ -1,24 +1,22 @@
 metadata:
-  generated: "2025-10-07"
+  generated: "2025-10-23"
   source: "Azure Bicep Public Registry (br/public)"
   notes: "Managed manifest for Azure Verified Modules used by Azure FSI Landing Zone agent."
-
 modules:
   virtual_network:
     display_name: "Virtual Network"
     registry: "br/public:avm/res/network/virtual-network"
-    version: "0.1.8"
+    version: "0.7.1"
     description: "Virtual Network with subnets, NSGs, and routing controls"
     use_case: "Hub-and-spoke network foundation for FSI workloads"
     key_features:
       - "DDoS protection plan support"
       - "Service endpoints and private endpoints"
       - "Custom subnet definitions"
-
   azure_firewall:
     display_name: "Azure Firewall"
     registry: "br/public:avm/res/network/azure-firewall"
-    version: "0.3.0"
+    version: "0.9.1"
     description: "Azure Firewall with premium threat protection"
     use_case: "Secure perimeter for hub virtual network traffic inspection"
     key_features:
@@ -26,10 +24,22 @@ modules:
       - "Threat intelligence mode configuration"
       - "Public IP management"
 
+  bastion_host:
+    display_name: "Azure Bastion Host"
+    registry: "br/public:avm/res/network/bastion-host"
+    version: "0.8.0"
+    description: "Azure Bastion Host for secure VM access"
+    use_case: "Secure RDP/SSH access to VMs without public IPs"
+    key_features:
+      - "Native client support with tunneling"
+      - "IP-based connection support"
+      - "Premium SKU with scale units"
+      - "Diagnostic settings integration"
+
   key_vault:
     display_name: "Key Vault"
     registry: "br/public:avm/res/key-vault/vault"
-    version: "0.6.2"
+    version: "0.13.3"
     description: "Azure Key Vault with RBAC and purge protection"
     use_case: "Secrets management and encryption key storage"
     key_features:
@@ -40,7 +50,7 @@ modules:
   storage_account:
     display_name: "Storage Account"
     registry: "br/public:avm/res/storage/storage-account"
-    version: "0.9.1"
+    version: "0.27.1"
     description: "Storage Account with enhanced compliance controls"
     use_case: "Durable storage for financial services data"
     key_features:
@@ -51,6 +61,7 @@ modules:
   network_security_group:
     display_name: "Network Security Group"
     registry: "br/public:avm/res/network/network-security-group"
+    version: "0.5.2"
     status: "planned"
     description: "Network Security Group with Azure best-practice rules"
     use_case: "Subnet and NIC-level traffic filtering"
@@ -73,6 +84,7 @@ modules:
   management_group:
     display_name: "Management Group"
     registry: "br/public:avm/res/management/management-group"
+    version: "0.1.2"
     status: "planned"
     description: "Management group hierarchy configuration"
     use_case: "Enterprise-scale governance and policy inheritance"
@@ -81,12 +93,38 @@ modules:
       - "Cost management alignment"
       - "Policy propagation"
 
-  policy_assignment:
-    display_name: "Policy Assignment"
-    status: "native"
-    description: "Azure Policy assignment using native resources (AVM module pending)"
-    use_case: "Apply FSI compliance and governance policies"
+  policy_assignment_sub:
+    display_name: "Policy Assignment (Subscription Scope)"
+    registry: "br/public:avm/res/authorization/policy-assignment/sub-scope"
+    version: "0.1.0"
+    description: "Azure Policy assignment at subscription scope"
+    use_case: "Apply FSI compliance and governance policies to subscriptions"
     key_features:
       - "Supports built-in initiatives"
       - "Custom policy parameters"
       - "Managed identity support"
+      - "Subscription-level enforcement"
+
+  policy_assignment_rg:
+    display_name: "Policy Assignment (Resource Group Scope)"
+    registry: "br/public:avm/res/authorization/policy-assignment/rg-scope"
+    version: "0.1.0"
+    description: "Azure Policy assignment at resource group scope"
+    use_case: "Apply FSI compliance and governance policies to resource groups"
+    key_features:
+      - "Supports built-in initiatives"
+      - "Custom policy parameters"
+      - "Managed identity support"
+      - "Resource group-level enforcement"
+
+  policy_assignment_mg:
+    display_name: "Policy Assignment (Management Group Scope)"
+    registry: "br/public:avm/res/authorization/policy-assignment/mg-scope"
+    version: "0.1.0"
+    description: "Azure Policy assignment at management group scope"
+    use_case: "Apply FSI compliance and governance policies to management groups"
+    key_features:
+      - "Supports built-in initiatives"
+      - "Custom policy parameters"
+      - "Managed identity support"
+      - "Management group-level enforcement with inheritance"

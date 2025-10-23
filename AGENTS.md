@@ -40,6 +40,13 @@ uv run python scripts/test_setup.py     # Verify installation
 ```
 > Dependency locking: the setup script writes `uv.lock` on first run (from `requirements.txt`) and reuses it afterwards. Run `uv pip compile requirements.txt -o uv.lock` when you need to refresh versions.
 
+### Maintenance
+```bash
+# Update AVM module versions
+./scripts/update-avm-versions.sh        # Check for updates to Azure Verified Modules
+./scripts/update-avm-versions.sh --update  # Apply updates to avm-modules.yaml
+```
+
 ### Testing
 ```bash
 uv run pytest tests/                    # Run all tests

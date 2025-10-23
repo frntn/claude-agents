@@ -152,13 +152,26 @@ modules:
     status: "planned"  # Future module, not yet used
     registry: "br/public:avm/res/network/network-security-group"
 
-  policy_assignment:
-    status: "native"  # Uses native Azure resources (no AVM module)
-    description: "Azure Policy assignment using native resources (AVM module pending)"
+  policy_assignment_sub:
+    registry: "br/public:avm/res/authorization/policy-assignment/sub-scope"
+    version: "0.1.0"
+    description: "Azure Policy assignment at subscription scope"
+
+  policy_assignment_rg:
+    registry: "br/public:avm/res/authorization/policy-assignment/rg-scope"
+    version: "0.1.0"
+    description: "Azure Policy assignment at resource group scope"
+
+  policy_assignment_mg:
+    registry: "br/public:avm/res/authorization/policy-assignment/mg-scope"
+    version: "0.1.0"
+    description: "Azure Policy assignment at management group scope"
 ```
 
 **Error prevention** ([agent.py:131-133](../../../agents/azure-fsi-landingzone/agent.py#L131)):
 ```python
+# Prevents usage of modules marked as "native" (using Azure resources directly)
+# or "planned" (not yet implemented)
 if metadata.get('status') == 'native':
     raise ValueError(f"Module '{module_key}' uses native resources (no AVM module available)")
 ```
